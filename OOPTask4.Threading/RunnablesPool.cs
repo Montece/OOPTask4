@@ -2,16 +2,34 @@
 
 public sealed class RunnablesPool
 {
-    private List<Runnable> _runnables = new();
+    private readonly List<Runnable> _runnables = new();
 
-    public RunnablesPool()
+    public Runnable AddAndStart(RunnableTarget runnableTarget)
     {
+        ArgumentNullException.ThrowIfNull(runnableTarget);
 
+        var runnable = new Runnable(runnableTarget);
+
+        runnable.Start();
+
+        _runnables.Add(runnable);
+
+        return runnable;
     }
 
-    public void AddAndStart(RunnableTarget runnableTarget)
+    public bool RemoveAndStop(Runnable runnable)
     {
-        var runnable = new Runnable(runnableTarget);
-        ru
+        ArgumentNullException.ThrowIfNull(runnable);
+
+        if (!_runnables.Contains(runnable))
+        {
+            return false;
+        }
+
+        runnable.Stop();
+
+        _runnables.Remove(runnable);
+        
+        return true;
     }
 }

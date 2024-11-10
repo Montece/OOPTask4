@@ -1,78 +1,79 @@
-﻿using Xunit;
+﻿using System.Diagnostics;
+using Xunit;
 
-namespace OOPTask4.Threading.Tests
+namespace OOPTask4.Threading.Tests;
+
+public sealed class SignalTests
 {
-    public class SignalTests
+    [Fact]
+    public void Signal_Ctor_Success()
     {
-        [Fact]
-        public void Signal_Ctor_Success()
+        var signal0 = new Signal(true);
+        var signal1 = new Signal(false);
+    }
+
+    [Fact]
+    public void Signal_TurnOnAndWait_CorrectOrder()
+    {
+        var results = new List<string>();
+        var beforeText = "before signal";
+        var afterText = "after signal";
+
+        var signal0 = new Signal(false);
+
+        var task0 = Task.Run(() =>
         {
-            var signal0 = new Signal(true);
-            var signal1 = new Signal(false);
-        }
+            signal0.WaitForTurnOn();
+            results.Add(afterText);
+        });
 
-        [Fact]
-        public void Signal_TurnOnAndWait_CorrectOrder()
+        var task1 = Task.Run(() =>
         {
-            var results = new List<string>();
-            var beforeText = "before signal";
-            var afterText = "after signal";
+            results.Add(beforeText);
+            signal0.TurnOn();
+        });
 
-            var signal0 = new Signal(false);
+        task0.Wait();
+        task1.Wait();
 
-            var task0 = Task.Run(() =>
-            {
-                signal0.WaitForTurnOn();
-                results.Add(afterText);
-            });
+        Assert.Equal(results[0], beforeText);
+        Assert.Equal(results[1], afterText);
+    }
 
-            var task1 = Task.Run(() =>
-            {
-                results.Add(beforeText);
-                signal0.TurnOn();
-            });
+    [Fact]
+    public void Signal_TurnOffAndWait_CorrectOrder()
+    {
+        var results = new List<string>();
+        var beforeText = "before signal";
+        var afterText = "after signal";
 
-            task0.Wait();
-            task1.Wait();
+        var signal0 = new Signal(true);
 
-            Assert.Equal(results[0], beforeText);
-            Assert.Equal(results[1], afterText);
-        }
-
-        [Fact]
-        public void Signal_TurnOffAndWait_CorrectOrder()
+        var task0 = Task.Run(() =>
         {
-            var results = new List<string>();
-            var beforeText = "before signal";
-            var afterText = "after signal";
+            signal0.TurnOff();
+            signal0.WaitForTurnOn();
+            results.Add(afterText);
+        });
 
-            var signal0 = new Signal(true);
+        var task1 = Task.Run(() =>
+        {
+            results.Add(beforeText);
+            signal0.TurnOn();
+        });
 
-            var task0 = Task.Run(() =>
-            {
-                signal0.TurnOff();
-                signal0.WaitForTurnOn();
-                results.Add(afterText);
-            });
+        task0.Wait();
+        task1.Wait();
 
-            var task1 = Task.Run(() =>
-            {
-                results.Add(beforeText);
-                signal0.TurnOn();
-            });
-
-            task0.Wait();
-            task1.Wait();
-
-            Assert.Equal(results[0], beforeText);
-            Assert.Equal(results[1], afterText);
-        }
+        Assert.Equal(results[0], beforeText);
+        Assert.Equal(results[1], afterText);
+    }
         
-        [Fact]
-        public void Signal_WaitForTurnOn_Timeout()
-        {
-            var signal = new Signal(false);
-            signal.WaitForTurnOn(TimeSpan.FromMilliseconds(100));
-        }
+    [Fact]
+    public void Signal_WaitForTurnOn_Timeout()
+    {
+        var timeoutTimeMs = 100;
+        var signal = new Signal(false);
+        signal.WaitForTurnOn(TimeSpan.FromMilliseconds(timeoutTimeMs));
     }
 }
