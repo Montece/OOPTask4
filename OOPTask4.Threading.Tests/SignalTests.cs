@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Xunit;
+﻿using Xunit;
 
 namespace OOPTask4.Threading.Tests;
 
@@ -10,6 +9,9 @@ public sealed class SignalTests
     {
         var signal0 = new Signal(true);
         var signal1 = new Signal(false);
+
+        Assert.NotNull(signal0);
+        Assert.NotNull(signal1);
     }
 
     [Fact]
