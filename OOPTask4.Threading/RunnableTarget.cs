@@ -3,11 +3,13 @@
 public abstract class RunnableTarget
 {
     protected RunnableContext Context { get; private set; }
+    private TimeSpan Period { get; }
 
-    protected RunnableTarget(RunnableContext context)
+    protected RunnableTarget(RunnableContext context, TimeSpan period)
     {
         ArgumentNullException.ThrowIfNull(context);
 
+        Period = period;
         Context = context;
     }
 
@@ -16,6 +18,8 @@ public abstract class RunnableTarget
         while (!cancellationToken.IsCancellationRequested)
         {
             RunInternal();
+
+            Thread.Sleep(Period);
         }
     }
 
