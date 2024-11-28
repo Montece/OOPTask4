@@ -2,7 +2,7 @@
 
 namespace OOPTask4.Threading.Tests.RunnableTarget;
 
-internal sealed class MockRunnableTargetAffectToFlag(RunnableContext context) : Threading.RunnableTarget(context)
+internal sealed class MockRunnableTargetAffectToFlag(RunnableContext context) : Threading.RunnableTarget(context, TimeSpan.Zero)
 {
     protected override void RunInternal()
     {

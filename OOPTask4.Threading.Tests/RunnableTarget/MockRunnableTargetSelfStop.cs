@@ -1,6 +1,6 @@
 ﻿namespace OOPTask4.Threading.Tests.RunnableTarget;
 
-internal sealed class MockRunnableTargetSelfStop(RunnableContext context) : Threading.RunnableTarget(context)
+internal sealed class MockRunnableTargetSelfStop(RunnableContext context) : Threading.RunnableTarget(context, TimeSpan.Zero)
 {
     protected override void RunInternal()
     {

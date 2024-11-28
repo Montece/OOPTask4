@@ -22,7 +22,7 @@ public sealed class TickableRunnableTarget(TickableRunnableContext context, Time
         {
             context.Tickable.Tick();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // TODO Показ ошибки? Или запись в лог
         }

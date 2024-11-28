@@ -18,7 +18,10 @@ public class TickableGroup<T> where T : ITickable
         _pool.RemoveAndStop(runnable);
     }
 
-    public IReadOnlyCollection<Runnable> GetTickables() => _pool.GetRunnables();
+    public IReadOnlyCollection<Runnable> GetTickables()
+    {
+        return _pool.GetRunnables();
+    }
 
     /* Dealer => CarWarehouse.RequestCar() => WorkManager.RequestCar() => {
     {

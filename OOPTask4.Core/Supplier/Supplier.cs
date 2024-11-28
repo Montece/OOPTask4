@@ -33,7 +33,7 @@ public sealed class Supplier<T> : ITickable where T : Component
             throw new ComponentMismatchException();
         }
 
-        var addResult = false;
+        bool addResult;
 
         do
         {

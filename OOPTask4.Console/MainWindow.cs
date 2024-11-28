@@ -7,10 +7,8 @@ namespace OOPTask4.Console;
 
 public sealed class MainWindow : Window
 {
-    public static string UserName;
-
-    private TextField userNameText;
-    private TextField passwordText;
+    private readonly TextField _userNameText;
+    private readonly TextField _passwordText;
 
     public MainWindow()
     {
@@ -21,7 +19,7 @@ public sealed class MainWindow : Window
             Text = "Username:"
         };
 
-        userNameText = new()
+        _userNameText = new()
         {
             X = Pos.Right(usernameLabel) + 1,
             Width = Dim.Fill()
@@ -32,10 +30,10 @@ public sealed class MainWindow : Window
             Text = "Password:", X = Pos.Left(usernameLabel), Y = Pos.Bottom(usernameLabel) + 1
         };
         
-        passwordText = new()
+        _passwordText = new()
         {
             Secret = true,
-            X = Pos.Left(userNameText),
+            X = Pos.Left(_userNameText),
             Y = Pos.Top(passwordLabel),
             Width = Dim.Fill()
         };
@@ -66,15 +64,15 @@ public sealed class MainWindow : Window
 
         //Add(s);
 
-        Add(usernameLabel, userNameText, passwordLabel, passwordText, btnLogin);
+        Add(usernameLabel, _userNameText, passwordLabel, _passwordText, btnLogin, s);
     }
 
     private void BtnLoginOnClicked()
     {
-        if (userNameText.Text == "admin" && passwordText.Text == "password")
+        if (_userNameText.Text == "admin" && _passwordText.Text == "password")
         {
             MessageBox.Query ("Logging In", "Login Successful", "Ok");
-            UserName = (string)userNameText.Text;
+            //UserName = (string)userNameText.Text;
             Application.RequestStop();
         }
         else

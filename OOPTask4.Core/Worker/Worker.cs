@@ -2,7 +2,6 @@
 using OOPTask4.Core.Supplier;
 using OOPTask4.Core.Tickable;
 using OOPTask4.Core.Warehouse;
-using System.Diagnostics;
 
 namespace OOPTask4.Core.Worker;
 
@@ -99,11 +98,11 @@ public sealed class Worker<TI1, TI2, TI3, TO> : ITickable
             throw new ProductMismatchException();
         }
 
-        var addResult = false;
+        bool addResult;
 
         do
         {
-            addResult = _targetWarehouse.AddProduct(_bufferedTarget1);
+            addResult = _targetWarehouse.AddProduct(_bufferedTarget1!);
             
             if (!addResult)
             {

@@ -47,5 +47,8 @@ public sealed class RunnablesPool
         return true;
     }
 
-    public IReadOnlyCollection<Runnable> GetRunnables() => _runnables;
+    public IReadOnlyCollection<Runnable> GetRunnables()
+    {
+        return _runnables;
+    }
 }
