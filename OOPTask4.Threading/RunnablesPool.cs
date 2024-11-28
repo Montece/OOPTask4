@@ -17,6 +17,20 @@ public sealed class RunnablesPool
         return runnable;
     }
 
+    public bool Pause(Runnable runnable)
+    {
+        ArgumentNullException.ThrowIfNull(runnable);
+
+        if (!_runnables.Contains(runnable))
+        {
+            return false;
+        }
+
+        runnable.Pause();
+
+        return true;
+    }
+
     public bool RemoveAndStop(Runnable runnable)
     {
         ArgumentNullException.ThrowIfNull(runnable);
@@ -32,4 +46,6 @@ public sealed class RunnablesPool
         
         return true;
     }
+
+    public IReadOnlyCollection<Runnable> GetRunnables() => _runnables;
 }

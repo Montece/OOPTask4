@@ -3,13 +3,15 @@
 public sealed class Runnable
 {
     private readonly Thread _thread;
+    private readonly RunnableTarget _runnableTarget;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
     public Runnable(RunnableTarget runnableTarget)
     {
         ArgumentNullException.ThrowIfNull(runnableTarget);
 
-        _thread = new(() => runnableTarget.Run(_cancellationTokenSource.Token));
+        _runnableTarget = runnableTarget;
+        _thread = new(() => _runnableTarget.Run(_cancellationTokenSource.Token));
     }
 
     public void Start()
@@ -22,6 +24,16 @@ public sealed class Runnable
         _thread.Start();
     }
 
+    public void Pause()
+    {
+        if (!_thread.IsAlive)
+        {
+            return;
+        }
+
+        _runnableTarget.IsPaused = true;
+    }
+
     public void Stop()
     {
         if (!_thread.IsAlive)
@@ -30,5 +42,10 @@ public sealed class Runnable
         }
 
         _cancellationTokenSource.Cancel();
+    }
+
+    public override string ToString()
+    {
+        return _runnableTarget.ToString()!;
     }
 }

@@ -5,6 +5,4 @@ Application.Run<MainWindow>();
 
 Application.Shutdown();
 
-Console.WriteLine($"Username: {MainWindow.UserName}");
-
-Console.ReadLine();
+Environment.Exit(0);

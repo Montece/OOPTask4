@@ -1,4 +1,7 @@
-﻿using Terminal.Gui;
+﻿using OOPTask4.Core;
+using OOPTask4.Core.Products;
+using OOPTask4.Core.Supplier;
+using Terminal.Gui;
 
 namespace OOPTask4.Console;
 
@@ -47,14 +50,12 @@ public sealed class MainWindow : Window
         
         btnLogin.Clicked += BtnLoginOnClicked;
 
-        var array = new List<string>()
-        {
-            "Element 1",
-            "Element 2",
-            "Element 3",
-        };
+        TickableGroup<Supplier<Carcase>> pool = new();
+        pool.Add(new());
+        pool.Add(new());
+        pool.Add(new());
 
-        var s = new ListView(array)
+        var s = new ListView(pool.GetTickables().ToList())
         {
             Text = "Login",
             //Y = Pos.Bottom(btnLogin) + 1,
@@ -63,7 +64,7 @@ public sealed class MainWindow : Window
             Height = Dim.Fill()
         };
 
-        /*Add(s);*/
+        //Add(s);
 
         Add(usernameLabel, userNameText, passwordLabel, passwordText, btnLogin);
     }

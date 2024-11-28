@@ -4,6 +4,7 @@ public abstract class RunnableTarget
 {
     protected RunnableContext Context { get; private set; }
     private TimeSpan Period { get; }
+    public bool IsPaused { get; set; }
 
     protected RunnableTarget(RunnableContext context, TimeSpan period)
     {
@@ -17,7 +18,10 @@ public abstract class RunnableTarget
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            RunInternal();
+            if (!IsPaused)
+            {
+                RunInternal();
+            }
 
             Thread.Sleep(Period);
         }

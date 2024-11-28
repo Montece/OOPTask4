@@ -11,4 +11,8 @@
     <PackageReference Include="Terminal.Gui" Version="1.17.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OOPTask4.Core\OOPTask4.Core.csproj" />
+  </ItemGroup>
+
 </Project>

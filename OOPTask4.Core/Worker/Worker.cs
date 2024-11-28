@@ -2,6 +2,7 @@
 using OOPTask4.Core.Supplier;
 using OOPTask4.Core.Tickable;
 using OOPTask4.Core.Warehouse;
+using System.Diagnostics;
 
 namespace OOPTask4.Core.Worker;
 
@@ -11,15 +12,10 @@ public sealed class Worker<TI1, TI2, TI3, TO> : ITickable
     where TI3 : Component
     where TO : Product
 {
-    private readonly Type _supplyType1 = typeof(TI1);
-    private readonly Type _supplyType2 = typeof(TI2);
-    private readonly Type _supplyType3 = typeof(TI3);
-    private readonly Type _targetType = typeof(TO);
-
-    private Warehouse<TI1> _sourceWarehouseOfComponent1;
-    private Warehouse<TI2> _sourceWarehouseOfComponent2;
-    private Warehouse<TI3> _sourceWarehouseOfComponent3;
-    private Warehouse<TO> _targetWarehouse;
+    private Warehouse<TI1>? _sourceWarehouseOfComponent1;
+    private Warehouse<TI2>? _sourceWarehouseOfComponent2;
+    private Warehouse<TI3>? _sourceWarehouseOfComponent3;
+    private Warehouse<TO>? _targetWarehouse;
 
     private TI1? _bufferedComponent1;
     private TI2? _bufferedComponent2;
@@ -96,7 +92,7 @@ public sealed class Worker<TI1, TI2, TI3, TO> : ITickable
             }
         }
 
-        _bufferedTarget1 ??= Activator.CreateInstance(_targetType) as TO;
+        _bufferedTarget1 ??= Activator.CreateInstance(typeof(TO)) as TO;
 
         if (_bufferedTarget1 is null)
         {
@@ -113,7 +109,19 @@ public sealed class Worker<TI1, TI2, TI3, TO> : ITickable
             {
                 _targetWarehouse.IsNotFullAndNotEmpty.WaitForTurnOn();
             }
+            else
+            {
+                _bufferedComponent1 = null;
+                _bufferedComponent2 = null;
+                _bufferedComponent3 = null;
+                _bufferedTarget1 = null;
+            }
         }
         while (!addResult);
+    }
+
+    public override string ToString()
+    {
+        return "Worker";
     }
 }

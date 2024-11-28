@@ -46,4 +46,9 @@ public sealed class Supplier<T> : ITickable where T : Component
         }
         while (!addResult);
     }
+
+    public override string ToString()
+    {
+        return "Supplier";
+    }
 }
