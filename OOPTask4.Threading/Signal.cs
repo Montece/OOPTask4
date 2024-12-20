@@ -1,6 +1,6 @@
 ﻿namespace OOPTask4.Threading;
 
-public sealed class Signal(bool initialState)
+public sealed class Signal(bool initialState) : IDisposable
 {
     private readonly ManualResetEvent _manualResetEvent = new(initialState);
 
@@ -22,5 +22,10 @@ public sealed class Signal(bool initialState)
     public void WaitForTurnOn(TimeSpan timeout)
     {
         _manualResetEvent.WaitOne(timeout);
+    }
+
+    public void Dispose()
+    {
+        _manualResetEvent.Dispose();
     }
 }

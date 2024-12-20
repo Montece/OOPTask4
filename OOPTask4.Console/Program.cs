@@ -1,8 +1,14 @@
 ﻿using OOPTask4.Console;
+using OOPTask4.Core.Control;
 using Terminal.Gui;
 
-Application.Run<MainWindow>();
+var config = new CarBusinessConfig(2, 2, 2, 5, 5, 5, 5);
 
-Application.Shutdown();
+using (MainWindowController.CarBusiness = new(config, 16))
+{
+    Application.Run<MainWindow>();
 
-Environment.Exit(0);
+    MainWindowController.CarBusiness.StopBusiness();
+
+    Application.Shutdown();
+}

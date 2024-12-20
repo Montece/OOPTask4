@@ -1,6 +1,4 @@
-﻿using OOPTask4.Threading;
-
-namespace OOPTask4.Core.Tickable;
+﻿namespace OOPTask4.Threading.Tickable;
 
 public sealed class TickableRunnableTarget(TickableRunnableContext context, TimeSpan period, long? maximumTicksCount = null) : RunnableTarget(context, period)
 {
@@ -22,9 +20,9 @@ public sealed class TickableRunnableTarget(TickableRunnableContext context, Time
         {
             context.Tickable.Tick();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // TODO Показ ошибки? Или запись в лог
+            Logger.NLogger.Error(ex);
         }
     }
 

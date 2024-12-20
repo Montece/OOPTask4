@@ -1,27 +1,29 @@
-﻿using Xunit;
+﻿using System.Diagnostics.CodeAnalysis;
+using Xunit;
 
 namespace OOPTask4.Threading.Tests;
 
+[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 public sealed class SignalTests
 {
     [Fact]
     public void Signal_Ctor_Success()
     {
-        var signal0 = new Signal(true);
-        var signal1 = new Signal(false);
+        using var signal0 = new Signal(true);
+        using var signal1 = new Signal(false);
 
         Assert.NotNull(signal0);
         Assert.NotNull(signal1);
     }
 
     [Fact]
-    public void Signal_TurnOnAndWait_CorrectOrder()
+    public async Task Signal_TurnOnAndWait_CorrectOrder()
     {
         var results = new List<string>();
         var beforeText = "before signal";
         var afterText = "after signal";
 
-        var signal0 = new Signal(false);
+        using var signal0 = new Signal(false);
 
         var task0 = Task.Run(() =>
         {
@@ -35,21 +37,21 @@ public sealed class SignalTests
             signal0.TurnOn();
         });
 
-        task0.Wait();
-        task1.Wait();
+        await task0;
+        await task1;
 
         Assert.Equal(results[0], beforeText);
         Assert.Equal(results[1], afterText);
     }
 
     [Fact]
-    public void Signal_TurnOffAndWait_CorrectOrder()
+    public async Task Signal_TurnOffAndWait_CorrectOrder()
     {
         var results = new List<string>();
         var beforeText = "before signal";
         var afterText = "after signal";
 
-        var signal0 = new Signal(true);
+        using var signal0 = new Signal(true);
 
         var task0 = Task.Run(() =>
         {
@@ -64,8 +66,8 @@ public sealed class SignalTests
             signal0.TurnOn();
         });
 
-        task0.Wait();
-        task1.Wait();
+        await task0;
+        await task1;
 
         Assert.Equal(results[0], beforeText);
         Assert.Equal(results[1], afterText);
@@ -75,7 +77,7 @@ public sealed class SignalTests
     public void Signal_WaitForTurnOn_Timeout()
     {
         var timeoutTimeMs = 100;
-        var signal = new Signal(false);
+        using var signal = new Signal(false);
         signal.WaitForTurnOn(TimeSpan.FromMilliseconds(timeoutTimeMs));
     }
 }

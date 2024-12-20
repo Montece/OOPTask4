@@ -1,5 +1,5 @@
 ﻿using OOPTask4.Core.Products;
-using OOPTask4.Core.Supplier;
+using OOPTask4.Core.Supply;
 using OOPTask4.Core.Warehouse;
 using Xunit;
 
@@ -10,46 +10,30 @@ public sealed class SupplierTests
     [Fact]
     public void Supplier_Ctor_Success()
     {
-        var supplier = new Supplier<Engine>();
+        using var targetWarehouse = new Warehouse<Engine>(10);
+        var supplier = new Supplier<Engine>(targetWarehouse);
 
         Assert.NotNull(supplier);
     }
 
     [Fact]
-    public void Supplier_TickWithoutWarehouse_Exception()
+    public void Supplier_TickWithWarehouse_Success()
     {
-        Assert.Throws<NotSpecifiedWarehouseException>(() =>
-        {
-            var supplier = new Supplier<Engine>();
-            supplier.Tick();
-        });
+        using var targetWarehouse = new Warehouse<Engine>(10);
+        var supplier = new Supplier<Engine>(targetWarehouse);
+        supplier.Tick();
     }
 
     [Fact]
     public void Supplier_TickWithEmptyWarehouse_Success()
     {
-        var supplier = new Supplier<Engine>();
-        var warehouse = new Warehouse<Engine>(1);
-        supplier.BindToWarehouse(warehouse);
+        using var warehouse = new Warehouse<Engine>(1);
+        var supplier = new Supplier<Engine>(warehouse);
 
         var oldWarehouseComponentsCount = warehouse.ProductsCount;
         supplier.Tick();
         var newWarehouseComponentsCount = warehouse.ProductsCount;
 
         Assert.Equal(oldWarehouseComponentsCount, newWarehouseComponentsCount - 1);
-    }
-
-    [Fact]
-    public void Supplier_TickWithFullWarehouse_Exception()
-    {
-        Assert.Throws<WarehouseIsFullException>(() =>
-        {
-            var supplier = new Supplier<Engine>();
-            var warehouse = new Warehouse<Engine>(1);
-            supplier.BindToWarehouse(warehouse);
-
-            supplier.Tick();
-            supplier.Tick();
-        });
     }
 }

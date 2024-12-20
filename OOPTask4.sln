@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OOPTask4.Core", "OOPTask4.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OOPTask4.Core.Tests", "OOPTask4.Core.Tests\OOPTask4.Core.Tests.csproj", "{1CCEE578-F4C7-439C-9C31-E86D9D48EF96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OOPTask4.Console", "OOPTask4.Console\OOPTask4.Console.csproj", "{22E8E9C7-079B-40C0-88EB-BD5B4D2E032C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OOPTask4.Console", "OOPTask4.Console\OOPTask4.Console.csproj", "{22E8E9C7-079B-40C0-88EB-BD5B4D2E032C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

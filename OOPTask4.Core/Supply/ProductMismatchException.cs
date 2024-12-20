@@ -1,3 +1,3 @@
-﻿namespace OOPTask4.Core.Supplier;
+﻿namespace OOPTask4.Core.Supply;
 
 internal sealed class ProductMismatchException : Exception;

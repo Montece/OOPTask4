@@ -1,4 +1,4 @@
-﻿using OOPTask4.Threading.Tests.Runnalbe;
+﻿using OOPTask4.Threading.Tests.Runnable;
 using Xunit;
 
 namespace OOPTask4.Threading.Tests.RunnableTarget;

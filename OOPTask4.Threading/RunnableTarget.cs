@@ -2,11 +2,11 @@
 
 public abstract class RunnableTarget
 {
-    protected RunnableContext Context { get; private set; }
+    protected object Context { get; private set; }
     private TimeSpan Period { get; }
     public bool IsPaused { get; set; }
 
-    protected RunnableTarget(RunnableContext context, TimeSpan period)
+    protected RunnableTarget(object context, TimeSpan period)
     {
         ArgumentNullException.ThrowIfNull(context);
 

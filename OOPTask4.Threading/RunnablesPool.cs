@@ -2,7 +2,7 @@
 
 public sealed class RunnablesPool
 {
-    private readonly List<Runnable> _runnables = new();
+    private readonly List<Runnable> _runnables = [];
 
     public Runnable AddAndStart(RunnableTarget runnableTarget)
     {
@@ -17,38 +17,17 @@ public sealed class RunnablesPool
         return runnable;
     }
 
-    public bool Pause(Runnable runnable)
+    public void RemoveAndStop(Runnable runnable)
     {
         ArgumentNullException.ThrowIfNull(runnable);
 
         if (!_runnables.Contains(runnable))
         {
-            return false;
-        }
-
-        runnable.Pause();
-
-        return true;
-    }
-
-    public bool RemoveAndStop(Runnable runnable)
-    {
-        ArgumentNullException.ThrowIfNull(runnable);
-
-        if (!_runnables.Contains(runnable))
-        {
-            return false;
+            return;
         }
 
         runnable.Stop();
 
         _runnables.Remove(runnable);
-        
-        return true;
-    }
-
-    public IReadOnlyCollection<Runnable> GetRunnables()
-    {
-        return _runnables;
     }
 }

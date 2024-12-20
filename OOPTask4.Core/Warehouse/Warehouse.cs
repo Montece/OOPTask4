@@ -1,13 +1,14 @@
-﻿using OOPTask4.Core.Products;
+﻿using JetBrains.Annotations;
+using OOPTask4.Core.Products;
 using OOPTask4.Threading;
 
 namespace OOPTask4.Core.Warehouse;
 
-public class Warehouse<T> where T : Product
+public sealed class Warehouse<T> : IDisposable where T : Product
 {
-    public Signal IsFull { get; private set; } = new(false);
-    public Signal IsNotFullAndNotEmpty { get; private set; } = new(false);
-    public Signal IsEmpty { get; private set; } = new(true);
+    private Signal IsFull { get; } = new(false);
+    public Signal IsNotFullAndNotEmpty { get; } = new(false);
+    private Signal IsEmpty { get; } = new(true);
     
     public int ProductsCount
     {
@@ -72,6 +73,7 @@ public class Warehouse<T> where T : Product
         }
     }
 
+    [MustUseReturnValue]
     public Product? GetProduct()
     {
         lock (_lock)
@@ -105,5 +107,21 @@ public class Warehouse<T> where T : Product
 
             return product;
         }
+    }
+
+    [MustUseReturnValue]
+    public IReadOnlyList<T> GetProducts()
+    {
+        lock (_lock)
+        {
+            return _products.ToList();
+        }
+    }
+
+    public void Dispose()
+    {
+        IsFull.Dispose();
+        IsNotFullAndNotEmpty.Dispose();
+        IsEmpty.Dispose();
     }
 }

@@ -2,5 +2,10 @@
 
 public abstract class UniqueObject
 {
-    public Guid Id { get; } = Guid.NewGuid();
+    private Guid Id { get; } = Guid.NewGuid();
+
+    public override string ToString()
+    {
+        return $"{GetType().Name} {Id}";
+    }
 }

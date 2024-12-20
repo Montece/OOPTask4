@@ -1,8 +1,6 @@
-﻿using OOPTask4.Threading;
+﻿namespace OOPTask4.Threading.Tickable;
 
-namespace OOPTask4.Core.Tickable;
-
-public sealed class TickableRunnableContext : RunnableContext
+public sealed class TickableRunnableContext
 {
     public ITickable Tickable { get; }
 
