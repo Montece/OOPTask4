@@ -1,6 +1,6 @@
 ﻿using OOPTask4.Threading.Tickable;
 
-namespace OOPTask4.Threading.Tests.Runner;
+namespace OOPTask4.Threading.Tests;
 
 internal sealed class TickableMock : ITickable
 {

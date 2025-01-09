@@ -21,8 +21,8 @@ public sealed class Warehouse<T> : IDisposable where T : Product
         }
     }
 
+    private bool _disposed;
     private readonly Stack<T> _products = [];
-
     private readonly object _lock = new();
     private readonly int _maxCapacity;
 
@@ -120,8 +120,30 @@ public sealed class Warehouse<T> : IDisposable where T : Product
 
     public void Dispose()
     {
-        IsFull.Dispose();
-        IsNotFullAndNotEmpty.Dispose();
-        IsEmpty.Dispose();
+        Dispose(true);
+
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            IsFull.Dispose();
+            IsNotFullAndNotEmpty.Dispose();
+            IsEmpty.Dispose();
+        }
+
+        _disposed = true;
+    }
+
+    ~Warehouse()
+    {
+        Dispose(false);
     }
 }

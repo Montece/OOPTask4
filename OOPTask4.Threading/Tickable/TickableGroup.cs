@@ -2,10 +2,10 @@
 
 public sealed class TickableGroup<T> where T : class, ITickable
 {
-    private readonly RunnersPool _pool;
+    private readonly TickableThreadPool _pool;
     private readonly List<T> _tickables = [];
 
-    public TickableGroup(RunnersPool pool, T tickableToClone, int tickablesCount)
+    public TickableGroup(TickableThreadPool pool, T tickableToClone, int tickablesCount)
     {
         ArgumentNullException.ThrowIfNull(pool);
         ArgumentNullException.ThrowIfNull(tickableToClone);
@@ -35,7 +35,7 @@ public sealed class TickableGroup<T> where T : class, ITickable
     {
         foreach (var worker in _tickables)
         {
-            _pool.DoTickOnTarget(worker);
+            _pool.DoTick(worker);
         }
     }
 }

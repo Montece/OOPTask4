@@ -24,9 +24,11 @@ public sealed class CarBusiness : IDisposable
     public TimeSpan CarDealDelay { get; } = TimeSpan.FromMilliseconds(250);
     public bool BusinessIsRunning { get; private set; } = true;
 
+    private bool _disposed;
+
     public CarBusiness(CarBusinessConfig config, int threadsCount)
     {
-        var runnersPool = new RunnersPool(threadsCount);
+        var runnersPool = new TickableThreadPool(threadsCount);
 
         var controllerManager = new ControllerManager(this);
 
@@ -66,9 +68,31 @@ public sealed class CarBusiness : IDisposable
 
     public void Dispose()
     {
-        WarehouseCarcase.Dispose();
-        WarehouseAccessory.Dispose();
-        WarehouseEngine.Dispose();
-        WarehouseCar.Dispose();
+        Dispose(true);
+
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            WarehouseCarcase.Dispose();
+            WarehouseAccessory.Dispose();
+            WarehouseEngine.Dispose();
+            WarehouseCar.Dispose();
+        }
+
+        _disposed = true;
+    }
+
+    ~CarBusiness()
+    {
+        Dispose(false);
     }
 }

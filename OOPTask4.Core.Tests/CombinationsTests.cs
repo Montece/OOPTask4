@@ -6,20 +6,17 @@ using OOPTask4.Core.Warehouse;
 using OOPTask4.Core.Supply;
 using OOPTask4.Core.Work;
 using OOPTask4.Threading;
-using OOPTask4.Threading.Tickable;
 
 namespace OOPTask4.Core.Tests;
 
 public sealed class CombinationsTests
 {
-    private readonly TimeSpan _tickPeriod = TimeSpan.FromMilliseconds(1);
-
     [Fact]
     public void Combination_Supplier_Worker_Dealer_Warehouse_CarsCount()
     {
         using var carBusiness = new CarBusiness(new(1, 1, 1, 1, 1, 1, 1), 1);
         var controller = new ControllerManager(carBusiness);
-        var pool = new RunnablesPool();
+        var pool = new TickableThreadPool(10);
 
         using var warehouseCarcase = new Warehouse<Carcase>(100000);
         using var warehouseEngine = new Warehouse<Engine>(100000);
@@ -35,25 +32,40 @@ public sealed class CombinationsTests
 
         var dealer1 = new Dealer(controller, warehouseCar);
 
-        var tickable1 = pool.AddAndStart(new TickableRunnableTarget(new(supplier1), _tickPeriod, 9));
-        var tickable2 = pool.AddAndStart(new TickableRunnableTarget(new(supplier2), _tickPeriod, 7));
-        var tickable3 = pool.AddAndStart(new TickableRunnableTarget(new(supplier3), _tickPeriod, 8));
-        var tickable4 = pool.AddAndStart(new TickableRunnableTarget(new(worker1), _tickPeriod, 2));
-        var tickable5 = pool.AddAndStart(new TickableRunnableTarget(new(worker2), _tickPeriod, 6));
-        var tickable6 = pool.AddAndStart(new TickableRunnableTarget(new(dealer1), _tickPeriod, 5));
+        var supplier1Ticks = 9;
+        pool.DoTick(supplier1, supplier1Ticks);
+        Delay(supplier1Ticks);
 
-        Thread.Sleep(1000);
+        var supplier2Ticks = 7;
+        pool.DoTick(supplier2, supplier2Ticks);
+        Delay(supplier2Ticks);
 
-        pool.RemoveAndStop(tickable1);
-        pool.RemoveAndStop(tickable2);
-        pool.RemoveAndStop(tickable3);
-        pool.RemoveAndStop(tickable4);
-        pool.RemoveAndStop(tickable5);
-        pool.RemoveAndStop(tickable6);
+        var supplier3Ticks = 8;
+        pool.DoTick(supplier3, supplier3Ticks);
+        Delay(supplier3Ticks);
+
+        var worker1Ticks = 2;
+        pool.DoTick(worker1, worker1Ticks);
+        Delay(worker1Ticks);
+
+        var worker2Ticks = 6;
+        pool.DoTick(worker2, worker2Ticks);
+        Delay(worker2Ticks);
+
+        var dealer1Ticks = 5;
+        pool.DoTick(dealer1, dealer1Ticks);
+        Delay(dealer1Ticks);
+
+        Delay(10);
         
         Assert.Equal(1, warehouseCarcase.ProductsCount);
         Assert.Equal(0, warehouseEngine.ProductsCount);
         Assert.Equal(1, warehouseAccessory.ProductsCount);
         Assert.Equal(2, warehouseCar.ProductsCount);
+    }
+
+    private void Delay(int ticksCount)
+    {
+        Thread.Sleep(10 * ticksCount);
     }
 }

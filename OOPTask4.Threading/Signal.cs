@@ -2,6 +2,8 @@
 
 public sealed class Signal(bool initialState) : IDisposable
 {
+    private bool _disposed;
+
     private readonly ManualResetEvent _manualResetEvent = new(initialState);
 
     public void TurnOn()
@@ -26,6 +28,28 @@ public sealed class Signal(bool initialState) : IDisposable
 
     public void Dispose()
     {
-        _manualResetEvent.Dispose();
+        Dispose(true);
+
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            _manualResetEvent.Dispose();
+        }
+
+        _disposed = true;
+    }
+
+    ~Signal()
+    {
+        Dispose(false);
     }
 }

@@ -11,8 +11,6 @@ public sealed class Worker : Entity, ITickable
     private readonly Warehouse<Accessory> _sourceWarehouseOfAccessories;
     private readonly Warehouse<Car> _targetWarehouseOfCars;
 
-    private Car? _bufferedTarget1;
-
     public Worker(Warehouse<Carcase> carcasesWarehouse, Warehouse<Engine> enginesWarehouse, Warehouse<Accessory> accessoriesWarehouse, Warehouse<Car> carsWarehouse)
     {
         ArgumentNullException.ThrowIfNull(carcasesWarehouse);
@@ -37,25 +35,23 @@ public sealed class Worker : Entity, ITickable
         _ = GetProductFromWarehouse(_sourceWarehouseOfEngines);
         _ = GetProductFromWarehouse(_sourceWarehouseOfAccessories);
 
+        Car? bufferedTarget1 = null;
+
         do
         {
-            _bufferedTarget1 ??= Activator.CreateInstance(typeof(Car)) as Car;
+            bufferedTarget1 ??= Activator.CreateInstance(typeof(Car)) as Car;
         }
-        while (_bufferedTarget1 is null);
+        while (bufferedTarget1 is null);
 
         bool addResult;
 
         do
         {
-            addResult = _targetWarehouseOfCars.AddProduct(_bufferedTarget1!);
+            addResult = _targetWarehouseOfCars.AddProduct(bufferedTarget1);
             
             if (!addResult)
             {
                 _targetWarehouseOfCars.IsNotFullAndNotEmpty.WaitForTurnOn();
-            }
-            else
-            {
-                _bufferedTarget1 = null;
             }
         }
         while (!addResult);
