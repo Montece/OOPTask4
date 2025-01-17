@@ -1,19 +1,31 @@
 ﻿namespace OOPTask4.Core.Control;
 
-public sealed class CarBusinessConfig(
-    int workersCount,
-    int suppliersCount,
-    int dealersCount,
-    int warehouseCarcaseCapacity,
-    int warehouseAccessoryCapacity,
-    int warehouseEngineCapacity,
-    int warehouseCarCapacity)
+public sealed class CarBusinessConfig
 {
-    public int WorkersCount { get; } = workersCount;
-    public int SuppliersCount { get; } = suppliersCount;
-    public int DealersCount { get; } = dealersCount;
-    public int WarehouseCarcaseCapacity { get; } = warehouseCarcaseCapacity;
-    public int WarehouseAccessoryCapacity { get; } = warehouseAccessoryCapacity;
-    public int WarehouseEngineCapacity { get; } = warehouseEngineCapacity;
-    public int WarehouseCarCapacity { get; } = warehouseCarCapacity;
+    public int WorkersCount { get; }
+    public int SuppliersCount { get; }
+    public int DealersCount { get; }
+    public int WarehouseCarcaseCapacity { get; }
+    public int WarehouseAccessoryCapacity { get; }
+    public int WarehouseEngineCapacity { get; }
+    public int WarehouseCarCapacity { get; }
+
+    public CarBusinessConfig(int workersCount, int suppliersCount, int dealersCount, int warehouseCarcaseCapacity, int warehouseAccessoryCapacity, int warehouseEngineCapacity, int warehouseCarCapacity)
+    {
+        Utility.CheckIfGreaterThanZero(workersCount, nameof(workersCount));
+        Utility.CheckIfGreaterThanZero(suppliersCount, nameof(suppliersCount));
+        Utility.CheckIfGreaterThanZero(dealersCount, nameof(dealersCount));
+        Utility.CheckIfGreaterThanZero(warehouseCarcaseCapacity, nameof(warehouseCarcaseCapacity));
+        Utility.CheckIfGreaterThanZero(warehouseAccessoryCapacity, nameof(warehouseAccessoryCapacity));
+        Utility.CheckIfGreaterThanZero(warehouseEngineCapacity, nameof(warehouseEngineCapacity));
+        Utility.CheckIfGreaterThanZero(warehouseCarCapacity, nameof(warehouseCarCapacity));
+
+        WorkersCount = workersCount;
+        SuppliersCount = suppliersCount;
+        DealersCount = dealersCount;
+        WarehouseCarcaseCapacity = warehouseCarcaseCapacity;
+        WarehouseAccessoryCapacity = warehouseAccessoryCapacity;
+        WarehouseEngineCapacity = warehouseEngineCapacity;
+        WarehouseCarCapacity = warehouseCarCapacity;
+    }
 }

@@ -35,7 +35,7 @@ public sealed class TickableGroup<T> where T : class, ITickable
     {
         foreach (var worker in _tickables)
         {
-            _pool.DoTick(worker);
+            _pool.DoTick(worker, ticksCount: 1);
         }
     }
 }

@@ -9,8 +9,8 @@ public sealed class TickableThreadPool
 
     private readonly object _isRunningLock = new();
     private readonly object _tickablesLock = new();
-    private readonly TimeSpan _waitTimeout = TimeSpan.FromMilliseconds(100);
     private readonly Queue<ITickable> _tickablesQueue = new();
+    private static readonly TimeSpan waitTimeout = TimeSpan.FromMilliseconds(100);
 
     public TickableThreadPool(int threadsCount)
     {
@@ -30,6 +30,8 @@ public sealed class TickableThreadPool
     {
         while (true)
         {
+            ITickable? tickable = null;
+
             try
             {
                 lock (_isRunningLock)
@@ -40,28 +42,33 @@ public sealed class TickableThreadPool
                     }
                 }
 
-                ITickable? tickable = null;
-
                 lock (_tickablesLock)
                 {
-                    Monitor.Wait(_tickablesLock, _waitTimeout);
+                    Monitor.Wait(_tickablesLock, waitTimeout);
 
                     if (_tickablesQueue.Count > 0)
                     {
                         tickable = _tickablesQueue.Dequeue();
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.NLogger.Log(LogLevel.Error, ex, "Error in pool!");
+            }
 
+            try
+            {
                 tickable?.Tick();
             }
             catch (Exception ex)
             {
-                Logger.NLogger.Log(LogLevel.Error, ex);
+                Logger.NLogger.Log(LogLevel.Error, ex, "Error in tick!");
             }
         }
     }
 
-    public void DoTick(ITickable tickable, int ticksCount = 1)
+    public void DoTick(ITickable tickable, int ticksCount)
     {
         ArgumentNullException.ThrowIfNull(tickable);
 
@@ -73,14 +80,6 @@ public sealed class TickableThreadPool
             }
 
             Monitor.PulseAll(_tickablesLock);
-        }
-    }
-
-    ~TickableThreadPool()
-    {
-        lock (_isRunningLock)
-        {
-            _isRunning = false;
         }
     }
 }

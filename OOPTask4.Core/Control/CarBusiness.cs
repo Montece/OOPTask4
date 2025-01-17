@@ -54,8 +54,18 @@ public sealed class CarBusiness : IDisposable
 
     private void ProcessBusiness()
     {
+        if (_disposed)
+        {
+            throw new InvalidOperationException("Object was disposed!");
+        }
+
         while (BusinessIsRunning)
         {
+            if (_disposed)
+            {
+                throw new InvalidOperationException("Object was disposed!");
+            }
+
             Dealers.DoWork();
             Task.Delay(CarDealDelay).Wait();
         }
@@ -63,6 +73,11 @@ public sealed class CarBusiness : IDisposable
 
     public void StopBusiness()
     {
+        if (_disposed)
+        {
+            throw new InvalidOperationException("Object was disposed!");
+        }
+
         BusinessIsRunning = false;
     }
 

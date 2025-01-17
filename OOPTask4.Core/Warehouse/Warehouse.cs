@@ -28,16 +28,18 @@ public sealed class Warehouse<T> : IDisposable where T : Product
 
     public Warehouse(int maxCapacity)
     {
-        if (maxCapacity <= 0)
-        {
-            throw new ArgumentException("Must be greater than zero", nameof(maxCapacity));
-        }
+        Utility.CheckIfGreaterThanZero(maxCapacity, nameof(maxCapacity));
 
         _maxCapacity = maxCapacity;
     }
 
     public bool AddProduct(T product)
     {
+        if (_disposed)
+        {
+            throw new InvalidOperationException("Object was disposed!");
+        }
+
         ArgumentNullException.ThrowIfNull(product);
 
         lock (_lock)
@@ -76,6 +78,11 @@ public sealed class Warehouse<T> : IDisposable where T : Product
     [MustUseReturnValue]
     public Product? GetProduct()
     {
+        if (_disposed)
+        {
+            throw new InvalidOperationException("Object was disposed!");
+        }
+
         lock (_lock)
         {
             if (_products.Count == 0)
@@ -112,6 +119,11 @@ public sealed class Warehouse<T> : IDisposable where T : Product
     [MustUseReturnValue]
     public IReadOnlyList<T> GetProducts()
     {
+        if (_disposed)
+        {
+            throw new InvalidOperationException("Object was disposed!");
+        }
+
         lock (_lock)
         {
             return _products.ToList();

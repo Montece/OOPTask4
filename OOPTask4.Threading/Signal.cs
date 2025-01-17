@@ -8,21 +8,41 @@ public sealed class Signal(bool initialState) : IDisposable
 
     public void TurnOn()
     {
+        if (_disposed)
+        {
+            throw new InvalidOperationException("Object was disposed!");
+        }
+
         _manualResetEvent.Set();
     }
 
     public void TurnOff()
     {
+        if (_disposed)
+        {
+            throw new InvalidOperationException("Object was disposed!");
+        }
+
         _manualResetEvent.Reset();
     }
 
     public void WaitForTurnOn()
     {
+        if (_disposed)
+        {
+            throw new InvalidOperationException("Object was disposed!");
+        }
+
         _manualResetEvent.WaitOne();
     }
 
     public void WaitForTurnOn(TimeSpan timeout)
     {
+        if (_disposed)
+        {
+            throw new InvalidOperationException("Object was disposed!");
+        }
+
         _manualResetEvent.WaitOne(timeout);
     }
 
