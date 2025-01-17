@@ -9,65 +9,68 @@ public sealed class SignalTests
     [Fact]
     public void Signal_Ctor_Success()
     {
-        using var signalOn = new Signal(true);
-        using var signalOff = new Signal(false);
+        using var signal0 = new Signal(true);
+        using var signal1 = new Signal(false);
+
+        Assert.NotNull(signal0);
+        Assert.NotNull(signal1);
     }
 
     [Fact]
     public async Task Signal_TurnOnAndWait_CorrectOrder()
     {
         var results = new List<string>();
-        var textBefore = "before signal";
-        var textAfter = "after signal";
+        var beforeText = "before signal";
+        var afterText = "after signal";
 
-        using var signal = new Signal(false);
+        using var signal0 = new Signal(false);
 
-        var taskAfter = Task.Run(() =>
+        var task0 = Task.Run(() =>
         {
-            signal.WaitForTurnOn();
-            results.Add(textAfter);
+            signal0.WaitForTurnOn();
+            results.Add(afterText);
         });
 
-        var taskBefore = Task.Run(() =>
+        var task1 = Task.Run(() =>
         {
-            results.Add(textBefore);
-            signal.TurnOn();
+            results.Add(beforeText);
+            signal0.TurnOn();
         });
 
-        await taskAfter;
-        await taskBefore;
+        await task0;
+        await task1;
 
-        Assert.Equal(results[0], textBefore);
-        Assert.Equal(results[1], textAfter);
+        Assert.Equal(results[0], beforeText);
+        Assert.Equal(results[1], afterText);
     }
 
     [Fact]
     public async Task Signal_TurnOffAndWait_CorrectOrder()
     {
         var results = new List<string>();
-        var textBefore = "before signal";
-        var textAfter = "after signal";
+        var beforeText = "before signal";
+        var afterText = "after signal";
 
-        using var signal = new Signal(true);
+        using var signal0 = new Signal(true);
 
-        var taskAfter = Task.Run(() =>
+        var task0 = Task.Run(() =>
         {
-            signal.TurnOff();
-            signal.WaitForTurnOn();
-            results.Add(textAfter);
+            signal0.TurnOff();
+            signal0.WaitForTurnOn();
+            results.Add(afterText);
         });
 
-        var taskBefore = Task.Run(() =>
+        var task1 = Task.Run(() =>
         {
-            results.Add(textBefore);
-            signal.TurnOn();
+            results.Add(beforeText);
+            signal0.TurnOn();
         });
 
-        await taskAfter;
-        await taskBefore;
+        await task0;
+        await task1;
 
-        Assert.Equal(results[0], textBefore);
-        Assert.Equal(results[1], textAfter);
+        Assert.Equal(results[0], beforeText);
+        Assert.Equal(results[1], afterText);
     }
         
     [Fact]

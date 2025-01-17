@@ -39,7 +39,7 @@ public sealed class TickableThreadPoolTests
         {
             for (var i = 0; i < ticksForTickableCount; i++)
             {
-                pool.DoTick(tickable, ticksCount: 1);
+                pool.DoTick(tickable);
                 Thread.Sleep(30);
             }
         }
