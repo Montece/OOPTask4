@@ -5,12 +5,12 @@ namespace OOPTask4.Threading;
 
 public sealed class TickableThreadPool
 {
-    private readonly bool _isRunning = true;
+    private bool _isRunning = true;
 
     private readonly object _isRunningLock = new();
     private readonly object _tickablesLock = new();
+    private readonly TimeSpan _waitTimeout = TimeSpan.FromMilliseconds(100);
     private readonly Queue<ITickable> _tickablesQueue = new();
-    private static readonly TimeSpan waitTimeout = TimeSpan.FromMilliseconds(100);
 
     public TickableThreadPool(int threadsCount)
     {
@@ -30,8 +30,6 @@ public sealed class TickableThreadPool
     {
         while (true)
         {
-            ITickable? tickable = null;
-
             try
             {
                 lock (_isRunningLock)
@@ -42,33 +40,28 @@ public sealed class TickableThreadPool
                     }
                 }
 
+                ITickable? tickable = null;
+
                 lock (_tickablesLock)
                 {
-                    Monitor.Wait(_tickablesLock, waitTimeout);
+                    Monitor.Wait(_tickablesLock, _waitTimeout);
 
                     if (_tickablesQueue.Count > 0)
                     {
                         tickable = _tickablesQueue.Dequeue();
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.NLogger.Log(LogLevel.Error, ex, "Error in pool!");
-            }
 
-            try
-            {
                 tickable?.Tick();
             }
             catch (Exception ex)
             {
-                Logger.NLogger.Log(LogLevel.Error, ex, "Error in tick!");
+                Logger.NLogger.Log(LogLevel.Error, ex);
             }
         }
     }
 
-    public void DoTick(ITickable tickable, int ticksCount)
+    public void DoTick(ITickable tickable, int ticksCount = 1)
     {
         ArgumentNullException.ThrowIfNull(tickable);
 
@@ -80,6 +73,14 @@ public sealed class TickableThreadPool
             }
 
             Monitor.PulseAll(_tickablesLock);
+        }
+    }
+
+    ~TickableThreadPool()
+    {
+        lock (_isRunningLock)
+        {
+            _isRunning = false;
         }
     }
 }

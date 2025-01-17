@@ -9,15 +9,7 @@ namespace OOPTask4.Core;
 public abstract class Entity : UniqueObject, ITickable
 {
     [MustUseReturnValue]
-    protected static T GetProductFromWarehouse<T>(Warehouse<T> warehouse) where T : Product
-    {
-        var product = GetProductFromWarehouse(warehouse, null);
-
-        return product;
-    }
-
-    [MustUseReturnValue]
-    protected static T GetProductFromWarehouse<T>(Warehouse<T> warehouse, ControllerManager? controllerManager) where T : Product
+    protected static T GetProductFromWarehouse<T>(Warehouse<T> warehouse, ControllerManager? controllerManager = null) where T : Product
     {
         T? bufferedProduct = null;
 
