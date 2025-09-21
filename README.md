@@ -1,2 +1,2 @@
 # OOPTask4
-Training for OOP
+Задание описано в файле Task4.pdf
